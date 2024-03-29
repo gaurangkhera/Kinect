@@ -48,7 +48,7 @@ export default function Page() {
           </CardHeader>
           <CardContent className="flex justify-between gap-2">
             <Input placeholder="username#0000" value={username} onChange={(e) => setUsername(e.target.value)} required />
-            <Button onClick={handleSubmit}>Send friend request</Button>
+            <Button onClick={() => handleSubmit()}>Send friend request</Button>
           </CardContent>
         </Card>
       </div>

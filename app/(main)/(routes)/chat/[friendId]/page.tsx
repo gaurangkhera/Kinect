@@ -57,16 +57,15 @@ export default function Page() {
   }
 
   const handleSend = async () => {
-
-    if(message === '') {
+    if (message === "") {
       return;
     }
 
-      await sendMessage({
-        message,
-        friendId: friendId as Id<"friends">,
-        file: false,
-      });
+    await sendMessage({
+      message,
+      friendId: friendId as Id<"friends">,
+      file: false,
+    });
     setMessage("");
   };
 
@@ -103,8 +102,19 @@ export default function Page() {
                   {message.file === false ? (
                     <h1>{message.content}</h1>
                   ) : (
-                    <Link target="_blank" rel="noopener noreferrer" href={message.content}>
-                    <Image src={message.content} alt='image' className="cursor-pointer" width={500} height={200} /></Link>
+                    <Link
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href={message.content}
+                    >
+                      <Image
+                        src={message.content}
+                        alt="image"
+                        className="cursor-pointer"
+                        width={500}
+                        height={200}
+                      />
+                    </Link>
                   )}
                 </div>
               </div>
@@ -118,7 +128,9 @@ export default function Page() {
             onChange={(e) => setMessage(e.target.value)}
             onKeyPress={(e) => {
               if (e.key === "Enter") {
-                () => handleSend();
+                (async () => {
+                  await handleSend();
+                })();
               }
             }}
             placeholder={`Message ${
@@ -127,9 +139,11 @@ export default function Page() {
                 : friend.nameFriendTo
             }`}
           />
-          <CoverImageModal><Button>
-            <Paperclip className="w-5 h-5" />
-          </Button></CoverImageModal>
+          <CoverImageModal>
+            <Button>
+              <Paperclip className="w-5 h-5" />
+            </Button>
+          </CoverImageModal>
           <Button>
             <SendHorizontal onClick={() => handleSend()} className="w-5 h-5" />
           </Button>

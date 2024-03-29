@@ -10,10 +10,6 @@ module.exports = {
     // There are currently ESLint errors in shadcn/ui
     "components/ui",
   ],
-  parserOptions: {
-    project: true,
-    tsconfigRootDir: __dirname,
-  },
   rules: {
     // All of these overrides ease getting into
     // TypeScript, and can be removed for stricter
