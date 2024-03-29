@@ -15,7 +15,6 @@ import { api } from "@/convex/_generated/api";
 import { Home, User } from "lucide-react";
 import Link from "next/link";
 import { useUser } from "@clerk/clerk-react";
-import { getUserByEmail } from "@/convex/users";
 import { usePathname } from "next/navigation";
 
 const font = Inter({ subsets: ["latin"] });

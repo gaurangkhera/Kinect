@@ -9,13 +9,11 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useMutation, useQuery } from 'convex/react'
+import { useMutation } from 'convex/react'
 import { useState } from "react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { toast } from "sonner";
-import { useUser } from "@clerk/clerk-react";
-import { getUser } from "@/convex/friends";
 import { ConvexError } from "convex/values";
 
 export default function Page() {
@@ -45,7 +43,7 @@ export default function Page() {
           <CardHeader>
             <CardTitle>Add friend</CardTitle>
             <CardDescription>
-              Enter your friend's DiscID here.
+              Enter your friend&apos;s DiscID here.
             </CardDescription>
           </CardHeader>
           <CardContent className="flex justify-between gap-2">

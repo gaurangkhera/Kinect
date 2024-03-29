@@ -56,10 +56,6 @@ export default function Page() {
     return redirect("/");
   }
 
-  const handleFileClick = async () => {
-    
-  }
-
   const handleSend = async () => {
 
     if(message === '') {
