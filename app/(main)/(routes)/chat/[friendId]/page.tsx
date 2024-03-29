@@ -118,7 +118,7 @@ export default function Page() {
             onChange={(e) => setMessage(e.target.value)}
             onKeyPress={(e) => {
               if (e.key === "Enter") {
-                handleSend();
+                () => handleSend();
               }
             }}
             placeholder={`Message ${
