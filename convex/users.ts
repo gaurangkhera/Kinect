@@ -28,3 +28,23 @@ export const getUserByEmail = query({
     return await ctx.db.query("users").withIndex("by_email", (q) => q.eq("email", args.email)).first()
   },
 })
+
+export const updateUser = mutation({
+  args: {
+    email: v.string(),
+    newDiscId: v.string(),
+  },
+  async handler(ctx, args) {
+    const user = await getUserByEmail(ctx, { email: args.email })
+
+    if (!user) {
+      throw new ConvexError("User not found")
+    }
+
+    await ctx.db.patch(user._id, {
+      discId: args.newDiscId,
+    })
+
+    return user;
+  },
+})

@@ -4,6 +4,9 @@ const nextConfig = {
         remotePatterns: [
             {
                 "hostname": "files.edgestore.dev",
+            },
+            {
+                hostname: "img.clerk.com"
             }
         ],
     }
