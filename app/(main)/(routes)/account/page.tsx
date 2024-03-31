@@ -21,37 +21,62 @@ import { toast } from "sonner";
 
 export default function Page() {
   const clerkUser = useUser();
-  const [icon, setIcon] = useState(<Clipboard className="w-4 h-4" />)
-  const updateUser = useMutation(api.users.updateUser)
+  const [icon, setIcon] = useState(<Clipboard className="w-4 h-4" />);
+  const updateUser = useMutation(api.users.updateUser);
   const user = useQuery(api.users.getUserByEmail, {
     email: clerkUser.user?.emailAddresses[0].emailAddress as string,
   });
-  const [discId, setDiscId] = useState(user?.discId.split('#')[0])
+  const [discId, setDiscId] = useState(user?.discId.split("#")[0]);
   const userDiscId = user?.discId.split("#")[0];
   const userIdentifier = user?.discId.split("#")[1];
+
+  function hslToRgb(h: number, s: number, l: number): [number, number, number] {
+    let r: number, g: number, b: number;
   
+    if(s === 0){
+        r = g = b = l; // achromatic
+    }else{
+        const hue2rgb = (p: number, q: number, t: number): number => {
+            if(t < 0) t += 1;
+            if(t > 1) t -= 1;
+            if(t < 1/6) return p + (q - p) * 6 * t;
+            if(t < 1/2) return q;
+            if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+            return p;
+        }
+  
+        let q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+        let p = 2 * l - q;
+  
+        r = hue2rgb(p, q, h + 1/3);
+        g = hue2rgb(p, q, h);
+        b = hue2rgb(p, q, h - 1/3);
+    }
+  
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+  }
 
   const copyUserDiscID = () => {
     window.navigator.clipboard.writeText(user?.discId as string);
     setIcon(<Check className="w-4 h-4" />);
 
     setTimeout(() => {
-      setIcon(<Clipboard className="w-4 h-4" />)
-    }, 3500)
-  }
-  
+      setIcon(<Clipboard className="w-4 h-4" />);
+    }, 3500);
+  };
+
   const saveChanges = async () => {
     const promise = updateUser({
       email: clerkUser.user?.emailAddresses[0].emailAddress as string,
-      newDiscId: `${discId}#${userIdentifier}`
-    })
+      newDiscId: `${discId}#${userIdentifier}`,
+    });
 
     toast.promise(promise, {
       success: "Changes saved!",
       loading: "Saving changes...",
-      error: "An error occurred while saving changes."
-    })
-  }
+      error: "An error occurred while saving changes.",
+    });
+  };
   return (
     <Card>
       <CardHeader>
@@ -74,16 +99,18 @@ export default function Page() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-2">
-                <UserProfile
-                  appearance={{
-                    variables: {
-                      colorBackground: "#061818",
-                      colorText: "#fff",
-                      colorPrimary: "#83DCC5",
-                      colorDanger: "#D62929",
-                    },
-                  }}
-                />
+              <UserProfile
+    appearance={
+      {
+        variables: {
+          colorPrimary: '#ABEB47',
+          colorBackground:"#090B04",
+          colorText:"#FFFFFF",
+          
+        }
+      }
+    }
+/>
               </CardContent>
             </Card>
           </TabsContent>
@@ -96,23 +123,27 @@ export default function Page() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-2">
-              <div className="space-y-1">
-  <Label htmlFor="new">New password</Label>
-  <div className="flex border border-muted rounded-md gap-1 items-center space-x-2">
-    <Input
-      id="new"
-      className="flex-grow px-2 py-1"
-      value={discId}
-      onChange={(e) => setDiscId(e.target.value)}
-    />
-    <div className="px-2 py-1 bg-background rounded-lg text-right">
-      <Label>#{userIdentifier}</Label>
-    </div>
-    <Button variant={"outline"} size="icon" onClick={() => copyUserDiscID()}>
-      {icon}
-    </Button>
-  </div>
-</div>
+                <div className="space-y-1">
+                  <Label htmlFor="new">New password</Label>
+                  <div className="flex border border-muted rounded-md gap-1 items-center space-x-2">
+                    <Input
+                      id="new"
+                      className="flex-grow px-2 py-1"
+                      value={discId}
+                      onChange={(e) => setDiscId(e.target.value)}
+                    />
+                    <div className="px-2 py-1 bg-background rounded-lg text-right">
+                      <Label>#{userIdentifier}</Label>
+                    </div>
+                    <Button
+                      variant={"outline"}
+                      size="icon"
+                      onClick={() => copyUserDiscID()}
+                    >
+                      {icon}
+                    </Button>
+                  </div>
+                </div>
               </CardContent>
               <CardFooter>
                 <Button onClick={() => saveChanges()}>Save</Button>

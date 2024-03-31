@@ -12,7 +12,7 @@ export default function RootLayout({
       <ConvexClientProviderWithClerk>
         <body>
           <EdgeStoreProvider>
-            <ThemeProvider defaultTheme="dark" attribute="class" disableTransitionOnChange>{children}</ThemeProvider>
+            {children}
           </EdgeStoreProvider>
         </body>
       </ConvexClientProviderWithClerk>
