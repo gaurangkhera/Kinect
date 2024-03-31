@@ -34,6 +34,8 @@ export default function Page() {
   const [message, setMessage] = useState("");
   const lastMessageRef = useRef<HTMLDivElement | null>(null);
 
+  
+
   const friend = useQuery(api.friends.getFriendDetails, {
     friendId: friendId as Id<"friends">,
   });
@@ -42,7 +44,11 @@ export default function Page() {
   });
 
   useEffect(() => {
-    lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
+    if(getMessages !== undefined) {
+      setTimeout(() => {
+        lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    }
   }, [getMessages]);
 
   const sendMessage = useMutation(api.messages.addMessage);
@@ -144,7 +150,7 @@ export default function Page() {
               } else if (isYesterday(messageDate)) {
                 formattedDate = `Yesterday at ${format(messageDate, "HH:mm")}`;
               } else {
-                formattedDate = format(messageDate, "HH:mm, dd/MM/yyyy");
+                formattedDate = format(messageDate, "dd/MM/yyyy HH:mm");
               }
 
               const nextMessage = getMessages[index + 1];
@@ -190,7 +196,7 @@ export default function Page() {
                         </Link>
                       )}
                       <p
-                        className={`flex font-medium text-sm ${
+                        className={`flex font-medium text-xs ${
                           message.senderId === user?._id
                             ? "justify-end"
                             : "justify-start"

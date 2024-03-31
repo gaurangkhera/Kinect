@@ -27,10 +27,7 @@ export default function Page() {
         toast.promise(promise, {
           success: "Friend request sent!",
           error(error) {
-            if (error instanceof ConvexError) {
-              return error.data;
-            }
-            return "Failed to send friend request.";
+            return error.data
           },
           loading: "Sending friend request..."
         })

@@ -20,6 +20,8 @@ export default defineSchema(
       nameFriendTo: v.string(),
       friendOf: v.string(),
       friendTo: v.string(),
+      active: v.boolean(),
+      blocked: v.boolean(),
     }).index('by_friendOf', ['friendOf'])
       .index('by_friendTo', ['friendTo']),
     messages: defineTable({
@@ -27,7 +29,12 @@ export default defineSchema(
       file: v.boolean(),
       friendId: v.id('friends'),
       senderId: v.id('users'),
-    }).index('by_friendId', ['friendId'])
+    }).index('by_friendId', ['friendId']),
+    blocks: defineTable({
+      blocked: v.id('users'),
+      blocker: v.id('users'),
+    }).index('by_blocked', ['blocked'])
+      .index('by_blocker', ['blocker']),
   },
   // If you ever get an error about schema mismatch
   // between your data and your schema, and you cannot

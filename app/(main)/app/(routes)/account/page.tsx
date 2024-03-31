@@ -49,7 +49,9 @@ export default function Page() {
     toast.promise(promise, {
       success: "Changes saved!",
       loading: "Saving changes...",
-      error: "An error occurred while saving changes.",
+      error(error) {
+        return error.data
+      },
     });
   };
   return (
@@ -116,7 +118,7 @@ export default function Page() {
               </CardHeader>
               <CardContent className="space-y-2">
                 <div className="space-y-1">
-                  <Label htmlFor="new">New password</Label>
+                  <Label htmlFor="new">New username</Label>
                   <div className="flex border border-muted rounded-md gap-1 items-center space-x-2">
                     <Input
                       id="new"
