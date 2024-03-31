@@ -23,6 +23,7 @@ import Image from "next/image";
 import { format, isToday, isYesterday, parseISO, isSameDay } from "date-fns";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
+import Head from "next/head";
 
 export default function Page() {
   const clerkUser = useUser();
@@ -122,6 +123,12 @@ export default function Page() {
 
   return (
     <div className="col-span-9 h-full">
+        <Head>
+          <title>Chat with {friend.friendTo === user?._id
+                ? friend.nameFriendOf
+                : friend.nameFriendTo}
+              .</title>
+        </Head>
       <Card className="h-full ">
         <CardHeader>
           <CardTitle>

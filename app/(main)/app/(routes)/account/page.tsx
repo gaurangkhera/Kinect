@@ -19,6 +19,11 @@ import { Check, Clipboard } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useMediaQuery } from 'react-responsive'
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Account"
+}
 
 export default function Page() {
   const clerkUser = useUser();

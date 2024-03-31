@@ -10,6 +10,11 @@ import { useUser } from "@clerk/clerk-react";
 import { Id } from "@/convex/_generated/dataModel";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Blocked users"
+}
 
 export default function Page() {
   const friends = useQuery(api.friends.getUserFriends);

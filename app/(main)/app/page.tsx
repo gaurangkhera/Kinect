@@ -14,7 +14,11 @@ import { useState } from "react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { toast } from "sonner";
-import { ConvexError } from "convex/values";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Add friend."
+}
 
 export default function Page() {
     const [username, setUsername] = useState("");
