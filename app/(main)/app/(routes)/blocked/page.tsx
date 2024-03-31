@@ -10,16 +10,13 @@ import { useUser } from "@clerk/clerk-react";
 import { Id } from "@/convex/_generated/dataModel";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Blocked users"
-}
+import Head from "next/head";
 
 export default function Page() {
   const friends = useQuery(api.friends.getUserFriends);
   const unblock = useMutation(api.friends.unBlockUser)
   const clerkUser = useUser();
+  
 
   const currentUser = useQuery(api.users.getUserByEmail, {
     email: clerkUser.user?.emailAddresses[0].emailAddress as string,
@@ -60,6 +57,9 @@ export default function Page() {
 
   return (
     <Card className="h-full w-full">
+      <Head>
+        <title>Account</title>
+      </Head>
       <CardHeader>
         <CardTitle>Blocked users</CardTitle>
         <CardDescription>See people you've blocked here.</CardDescription>

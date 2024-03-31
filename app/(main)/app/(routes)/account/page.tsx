@@ -20,10 +20,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useMediaQuery } from 'react-responsive'
 import { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Account"
-}
+import Head from "next/head";
 
 export default function Page() {
   const clerkUser = useUser();
@@ -61,6 +58,9 @@ export default function Page() {
   };
   return (
     <Card>
+      <Head>
+        <title>Account</title>
+      </Head>
       <CardHeader>
         <CardTitle>Account</CardTitle>
         <CardDescription>Edit your account settings here.</CardDescription>
