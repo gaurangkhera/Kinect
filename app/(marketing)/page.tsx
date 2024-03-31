@@ -1,12 +1,13 @@
-import { CardBody, CardContainer, CardItem } from '@/components/global/3d-card'
-import { HeroParallax } from '@/components/global/connect-parallax'
-import { ContainerScroll } from '@/components/global/container-scroll-animation'
-import { InfiniteMovingCards } from '@/components/global/infinite-moving-cards'
-import { LampComponent } from '@/components/global/lamp'
-import Navbar from '@/components/global/navbar'
-import { Button } from '@/components/ui/button'
-import { CheckIcon } from 'lucide-react'
-import Image from 'next/image'
+import { CardBody, CardContainer, CardItem } from "@/components/global/3d-card";
+import { HeroParallax } from "@/components/global/connect-parallax";
+import { ContainerScroll } from "@/components/global/container-scroll-animation";
+import { InfiniteMovingCards } from "@/components/global/infinite-moving-cards";
+import { LampComponent } from "@/components/global/lamp";
+import Navbar from "@/components/global/navbar";
+import { Button } from "@/components/ui/button";
+import { CheckIcon } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   //WIP: remove fault IMAge for home page
@@ -19,16 +20,18 @@ export default function Home() {
           <ContainerScroll
             titleComponent={
               <div className="flex items-center flex-col">
-                <Button
-                  size={'lg'}
-                  className="p-8 mb-8 md:mb-0 text-2xl w-full sm:w-fit border-t-2 rounded-full border-muted bg-background hover:bg-muted group transition-all flex items-center justify-center gap-4 hover:shadow-xl hover:shadow-primary duration-500"
-                >
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
-                    Start For Free Today
-                  </span>
-                </Button>
+                <Link href="/app">
+                  <Button
+                    size={"lg"}
+                    className="p-8 mb-8 md:mb-0 text-2xl w-full sm:w-fit border-t-2 rounded-full border-muted bg-background hover:bg-muted group transition-all flex items-center justify-center gap-4 hover:shadow-xl hover:shadow-primary duration-500"
+                  >
+                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
+                      Start For Free Today
+                    </span>
+                  </Button>
+                </Link>
                 <h1 className="text-5xl md:text-8xl bg-clip-text text-transparent bg-gradient-to-b from-primary to-accent font-sans font-bold">
-                  Kinect with friends, family and more.
+                  Connect with friends, family and more.
                 </h1>
               </div>
             }
@@ -36,5 +39,5 @@ export default function Home() {
         </div>
       </section>
     </main>
-  )
+  );
 }

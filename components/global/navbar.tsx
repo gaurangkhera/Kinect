@@ -16,10 +16,10 @@ const Navbar = async (props: Props) => {
       <aside>
         <Link
           href="/app"
-          className="relative inline-flex h-10 overflow-hidden rounded-full p-[2px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
+          className="relative inline-flex h-10 overflow-hidden rounded-full p-[2px] focus:outline-none focus:ring-none focus:ring-none focus:ring-none focus:ring-none"
         >
           <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#ABEB47_0%,#090B04_50%,#5C7237_100%)]" />
-          <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl">
+          <span className="inline-flex focus:ring-none focus:border-none focus:outline-none hover:shadow-xl h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl">
             Open Kinect
           </span>
         </Link>

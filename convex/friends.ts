@@ -50,7 +50,7 @@ export const addFriend = mutation({
 
         const inactiveCheck = (await ctx.db.query('friends').withIndex('by_friendOf', (q) => q.eq('friendOf', currentUser._id)).collect()).filter((friend) => friend.friendTo === friendUser._id && !friend.active);
 
-        if (friendCheck) {
+        if (friendCheck && friendCheck.active && !friendCheck.blocked) {
             throw new ConvexError('You\'re already friends with this user.')
         }
 

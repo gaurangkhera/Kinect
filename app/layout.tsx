@@ -7,9 +7,9 @@ export const metadata: Metadata = {
   title: {
     absolute: "",
     default: "Kinect - Connect with friends, family and everyone else.",
-    template: "%s | Kinect"
+    template: "Kinect | %s"
   },
-  description: 'Zephyr is a blend of a freelancing like Fiverr and Upwork, and a business-focused social media platform such as Linkedin.',
+  description: 'Kinect is your favorite social media platform, but better. Connect with friends, family and more.',
 }
 
 export default function RootLayout({

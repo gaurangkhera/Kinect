@@ -103,8 +103,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en">
-      <body className={font.className}>
+<div className={font.className}>
         <Toaster position="top-center" richColors />
         <ThemeProvider
           attribute="class"
@@ -137,7 +136,7 @@ export default function RootLayout({
                   <Link href={`/app/blocked`} className="group my-1">
                     <div
                       className={`group-hover:bg-muted group-hover:text-primary rounded-lg p-3 gap-2 flex flex-row items-center cursor-pointer ${
-                        pathname === `/app`
+                        pathname === `/app/blocked`
                           ? "bg-primary text-background"
                           : "bg-background text-primary text-background"
                       }`}
@@ -369,7 +368,6 @@ export default function RootLayout({
             <div className="flex-grow overflow-auto">{children}</div>
           </div>
         </ThemeProvider>
-      </body>
       <style jsx>{`
         @media (min-width: 768px) {
           button {
@@ -377,6 +375,6 @@ export default function RootLayout({
           }
         }
       `}</style>
-    </html>
+</div>
   );
 }
