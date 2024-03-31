@@ -39,7 +39,7 @@ export default function Page() {
     }
   return (
       <div className="col-span-8">
-        <Card className="w-1/2">
+        <Card className="h-full w-full">
           <CardHeader>
             <CardTitle>Add friend</CardTitle>
             <CardDescription>

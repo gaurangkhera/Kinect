@@ -18,43 +18,18 @@ import { useMutation, useQuery } from "convex/react";
 import { Check, Clipboard } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useMediaQuery } from 'react-responsive'
 
 export default function Page() {
   const clerkUser = useUser();
+  const isMobile = useMediaQuery({ query: '(max-width: 768px)' })
   const [icon, setIcon] = useState(<Clipboard className="w-4 h-4" />);
   const updateUser = useMutation(api.users.updateUser);
   const user = useQuery(api.users.getUserByEmail, {
     email: clerkUser.user?.emailAddresses[0].emailAddress as string,
   });
   const [discId, setDiscId] = useState(user?.discId.split("#")[0]);
-  const userDiscId = user?.discId.split("#")[0];
   const userIdentifier = user?.discId.split("#")[1];
-
-  function hslToRgb(h: number, s: number, l: number): [number, number, number] {
-    let r: number, g: number, b: number;
-  
-    if(s === 0){
-        r = g = b = l; // achromatic
-    }else{
-        const hue2rgb = (p: number, q: number, t: number): number => {
-            if(t < 0) t += 1;
-            if(t > 1) t -= 1;
-            if(t < 1/6) return p + (q - p) * 6 * t;
-            if(t < 1/2) return q;
-            if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
-            return p;
-        }
-  
-        let q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-        let p = 2 * l - q;
-  
-        r = hue2rgb(p, q, h + 1/3);
-        g = hue2rgb(p, q, h);
-        b = hue2rgb(p, q, h - 1/3);
-    }
-  
-    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
-  }
 
   const copyUserDiscID = () => {
     window.navigator.clipboard.writeText(user?.discId as string);
@@ -85,7 +60,7 @@ export default function Page() {
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="account" className="w-full h-full">
-          <TabsList className="grid w-1/4 grid-cols-2">
+          <TabsList className="grid md:w-1/4 grid-cols-2">
             <TabsTrigger value="account">Account</TabsTrigger>
             <TabsTrigger value="profile">Profile</TabsTrigger>
           </TabsList>
@@ -98,19 +73,36 @@ export default function Page() {
                   done.
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-2">
-              <UserProfile
+              <CardContent className="space-y-2 overflow-x-hidden">
+              {!isMobile ? (<UserProfile
     appearance={
       {
         variables: {
           colorPrimary: '#ABEB47',
           colorBackground:"#090B04",
           colorText:"#FFFFFF",
-          
-        }
+        },
       }
     }
+/>) : (
+  <UserProfile
+  appearance={
+    {
+      variables: {
+        colorPrimary: '#ABEB47',
+        colorBackground:"#090B04",
+        colorText:"#FFFFFF",
+      },
+      elements: {
+       card: {
+        display: 'flex',
+        width: '80%'
+       }
+      }
+    }
+  }
 />
+)}
               </CardContent>
             </Card>
           </TabsContent>

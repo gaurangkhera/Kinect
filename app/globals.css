@@ -80,6 +80,21 @@
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
   }
+
+  .cl-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .cl-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+  }
 }
 
 @media (max-width: 640px) {

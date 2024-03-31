@@ -50,48 +50,51 @@ export default function Page() {
   if (friend === undefined || getMessages === undefined) {
     return (
       <div className="col-span-9 h-full">
-      <Card className="h-full ">
-        <CardHeader>
-          <CardTitle><Skeleton className="w-64 h-10" /></CardTitle>
-        </CardHeader>
+        <Card className="h-full ">
+          <CardHeader>
+            <CardTitle>
+              <Skeleton className="w-64 h-10" />
+            </CardTitle>
+          </CardHeader>
 
-        <div className="overflow-y-auto h-full max-h-[calc(100vh-12rem)] noscroll">
-          <CardContent className="gap-2">
-             <Skeleton className="w-1/4 h-4 my-1" />
-             <Skeleton className="w-1/2 h-4 my-1" />
-             <Skeleton className="w-8 h-4 my-1" />
-             <Skeleton className="w-20 h-4 my-1" />
-             <Skeleton className="w-16 h-4" />
-             <Skeleton className="w-1/4 h-4 my-1" />
-             <Skeleton className="w-1/2 h-4 my-1" />
-             <Skeleton className="w-8 h-4 my-1" />
-             <Skeleton className="w-20 h-4 my-1" />
-             <Skeleton className="w-16 h-4" />
-             <Skeleton className="w-1/4 h-4 my-1" />
-             <Skeleton className="w-1/2 h-4 my-1" />
-             <Skeleton className="w-8 h-4 my-1" />
-             <Skeleton className="w-20 h-4 my-1" />
-             <Skeleton className="w-16 h-4" />
-             <Skeleton className="w-1/4 h-4 my-1" />
-             <Skeleton className="w-1/2 h-4 my-1" />
-             <Skeleton className="w-8 h-4 my-1" />
-             <Skeleton className="w-20 h-4 my-1" />
-             <Skeleton className="w-16 h-4" />
-             <Skeleton className="w-1/4 h-4 my-1" />
-             <Skeleton className="w-1/2 h-4 my-1" />
-             <Skeleton className="w-8 h-4 my-1" />
-             <Skeleton className="w-20 h-4 my-1" />
-             <Skeleton className="w-16 h-4" />
-          </CardContent>
-        </div>
+          <div className="overflow-y-auto h-full max-h-[calc(100vh-12rem)] noscroll">
+            <CardContent className="gap-2">
+              <Skeleton className="w-1/4 h-4 my-1" />
+              <Skeleton className="w-1/2 h-4 my-1" />
+              <Skeleton className="w-8 h-4 my-1" />
+              <Skeleton className="w-20 h-4 my-1" />
+              <Skeleton className="w-16 h-4" />
+              <Skeleton className="w-1/4 h-4 my-1" />
+              <Skeleton className="w-1/2 h-4 my-1" />
+              <Skeleton className="w-8 h-4 my-1" />
+              <Skeleton className="w-20 h-4 my-1" />
+              <Skeleton className="w-16 h-4" />
+              <Skeleton className="w-1/4 h-4 my-1" />
+              <Skeleton className="w-1/2 h-4 my-1" />
+              <Skeleton className="w-8 h-4 my-1" />
+              <Skeleton className="w-20 h-4 my-1" />
+              <Skeleton className="w-16 h-4" />
+              <Skeleton className="w-1/4 h-4 my-1" />
+              <Skeleton className="w-1/2 h-4 my-1" />
+              <Skeleton className="w-8 h-4 my-1" />
+              <Skeleton className="w-20 h-4 my-1" />
+              <Skeleton className="w-16 h-4" />
+              <Skeleton className="w-1/4 h-4 my-1" />
+              <Skeleton className="w-1/2 h-4 my-1" />
+              <Skeleton className="w-8 h-4 my-1" />
+              <Skeleton className="w-20 h-4 my-1" />
+              <Skeleton className="w-16 h-4" />
+            </CardContent>
+          </div>
 
-        <CardFooter className="flex justify-between gap-2 sticky bottom-0 bg-background py-4">
-          <Skeleton className="w-full h-10" />
-          <Skeleton className="w-10 h-10" />
-          <Skeleton className="w-10 h-10" />
-        </CardFooter>
-      </Card>
-    </div>)
+          <CardFooter className="flex justify-between gap-2 sticky bottom-0 bg-background py-4">
+            <Skeleton className="w-full h-10" />
+            <Skeleton className="w-10 h-10" />
+            <Skeleton className="w-10 h-10" />
+          </CardFooter>
+        </Card>
+      </div>
+    );
   }
 
   if (friend === null) {
@@ -115,7 +118,12 @@ export default function Page() {
     <div className="col-span-9 h-full">
       <Card className="h-full ">
         <CardHeader>
-          <CardTitle>Chat with {friend.nameFriendTo}</CardTitle>
+          <CardTitle>
+            Chat with{" "}
+            {friend.friendTo === user?._id
+              ? friend.nameFriendOf
+              : friend.nameFriendTo}
+          </CardTitle>
         </CardHeader>
 
         <div className="overflow-y-auto h-full max-h-[calc(100vh-12rem)] noscroll">
@@ -129,23 +137,27 @@ export default function Page() {
             </CardDescription>
             {getMessages?.map((message, index) => {
               let messageDate = message._creationTime;
-              let formattedDate = '';
+              let formattedDate = "";
 
               if (isToday(messageDate)) {
-                formattedDate = format(messageDate, 'HH:mm');
+                formattedDate = format(messageDate, "HH:mm");
               } else if (isYesterday(messageDate)) {
-                formattedDate = `Yesterday at ${format(messageDate, 'HH:mm')}`;
+                formattedDate = `Yesterday at ${format(messageDate, "HH:mm")}`;
               } else {
-                formattedDate = format(messageDate, 'HH:mm, dd/MM/yyyy');
+                formattedDate = format(messageDate, "HH:mm, dd/MM/yyyy");
               }
 
               const nextMessage = getMessages[index + 1];
-              const showSeparator = nextMessage && !isSameDay(nextMessage._creationTime, messageDate);
+              const showSeparator =
+                nextMessage &&
+                !isSameDay(nextMessage._creationTime, messageDate);
 
               return (
                 <>
                   <div
-                    ref={index === getMessages.length - 1 ? lastMessageRef : null}
+                    ref={
+                      index === getMessages.length - 1 ? lastMessageRef : null
+                    }
                     className={`flex my-2 ${
                       message.senderId === user?._id
                         ? "justify-end"
@@ -153,37 +165,39 @@ export default function Page() {
                     }`}
                     key={message._id}
                   >
-                   <div
-                  className={`${
-                    message.senderId === user?._id
-                      ? "bg-primary text-muted rounded-l-md rounded-tr-md"
-                      : "bg-muted text-primary rounded-r-md rounded-tl-md"
-                  } p-2`}
-                >
-                  {message.file === false ? (
-                    <h1>{message.content}</h1>
-                  ) : (
-                    <Link
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      href={message.content}
+                    <div
+                      className={`${
+                        message.senderId === user?._id
+                          ? "bg-primary text-muted rounded-l-md rounded-tr-md"
+                          : "bg-muted text-primary rounded-r-md rounded-tl-md"
+                      } p-2`}
                     >
-                      <Image
-                        src={message.content}
-                        alt="image"
-                        className="cursor-pointer"
-                        width={500}
-                        height={200}
-                      />
-                    </Link>
-                  )}
-                    <p className={`flex font-medium text-sm ${
-                      message.senderId === user?._id
-                        ? "justify-end"
-                        : "justify-start"
-                    } ${message.file && 'mb-0 my-2'}`}>
-                      {formattedDate}
-                    </p>
+                      {message.file === false ? (
+                        <h1>{message.content}</h1>
+                      ) : (
+                        <Link
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          href={message.content}
+                        >
+                          <Image
+                            src={message.content}
+                            alt="image"
+                            className="cursor-pointer"
+                            width={500}
+                            height={200}
+                          />
+                        </Link>
+                      )}
+                      <p
+                        className={`flex font-medium text-sm ${
+                          message.senderId === user?._id
+                            ? "justify-end"
+                            : "justify-start"
+                        } ${message.file && "mb-0 my-2"}`}
+                      >
+                        {formattedDate}
+                      </p>
                     </div>
                   </div>
                   {showSeparator && <hr className="my-4" />}
