@@ -9,6 +9,7 @@ export const createUser = internalMutation({
       email: args.email,
       discId: `${args.name?.replace(/\s/g, "").toLowerCase()}#${Math.floor(1000 + Math.random() * 9000)}`,
       tokenIdentifier: args.tokenIdentifier,
+      stripeId: '',
     })
   },
 })
@@ -17,6 +18,15 @@ export const getUser = query({
   args: { tokenIdentifier: v.string() },
   async handler(ctx, args) {
     return await ctx.db.query("users").withIndex("by_token", (q) => q.eq("tokenIdentifier", args.tokenIdentifier)).first()
+  },
+})
+
+export const getUserById = query({
+  args: {
+    userId: v.id('users')
+  },
+  async handler(ctx, args) {
+    return await ctx.db.get(args.userId)
   },
 })
 

@@ -7,6 +7,26 @@ export async function getUser(ctx: QueryCtx | MutationCtx, tokenIdentifier: stri
     return user;
 }
 
+export const getUserBlocks = query({
+    async handler(ctx) {
+        const identity = await ctx.auth.getUserIdentity();
+        if (!identity) {
+            throw new ConvexError("Authentication required.");
+        }
+        const token = identity.tokenIdentifier;
+
+        const user = await getUser(ctx, token);
+
+        if(!user) {
+            throw new ConvexError("User not found.")
+        }
+
+        const userBlocks = await ctx.db.query('blocks').withIndex('by_blocker', (q) => q.eq('blocker', user._id)).collect();
+
+        return userBlocks;
+    },
+})
+
 export const addFriend = mutation({
     args: {
         friendDiscId: v.string(),
@@ -109,7 +129,7 @@ export const removeFriend = mutation({
 
 export const unBlockUser = mutation({
     args: {
-        friendId: v.id('friends'),
+        blockId: v.id('blocks')
     },
     async handler(ctx, args) {
         const identity = await ctx.auth.getUserIdentity();
@@ -120,23 +140,29 @@ export const unBlockUser = mutation({
 
         const currentUser = await getUser(ctx, tokenIdentifier);
 
-        const friend = await ctx.db.get(args.friendId);
-
-        if(!friend || !currentUser) {
-            throw new ConvexError('Friend or user not found.')
+        if(!currentUser) {
+            throw new ConvexError("User not found.")
         }
 
-        const canUnblock = friend.friendOf === currentUser._id || friend.friendTo === currentUser._id;
+        const block = await ctx.db.get(args.blockId);
 
-        if(!canUnblock) {
-            throw new ConvexError("Unauthorized action.")
+        if(!block) {
+            throw new ConvexError("You haven't blocked this user.")
         }
 
-        await ctx.db.patch(args.friendId, {
-            blocked: false,
-        });
+        const friendUser = await ctx.db.get(block.blocked)
 
-        const block = (await ctx.db.query('blocks').withIndex('by_blocker', (q) => q.eq('blocker', currentUser._id)).collect()).find((block) => block.blocked === friend.friendOf || block.blocked === friend.friendTo);
+        if(!friendUser) {
+            throw new ConvexError('Friend not found.')
+        }
+
+        const friendship = (await ctx.db.query('friends').withIndex('by_friendOf', (q) => q.eq('friendOf', currentUser._id)).collect()).filter((friend) => friend.friendTo === friendUser._id);
+
+        if(friendship.length > 0) {
+            await ctx.db.patch(friendship[0]._id, {
+                blocked: false,
+            })
+        }
 
 
         if(!block) {
@@ -193,12 +219,20 @@ export const blockUser = mutation({
         // Get the ID of the other user
         const otherUserId = friend.friendOf === currentUser._id ? friend.friendTo : friend.friendOf;
 
+        const otherUser = await ctx.db.get(otherUserId as Id<"users">);
+        
+        if(!otherUser) {
+            throw new ConvexError('Friend not found.')
+        }
+
         await ctx.db.patch(args.friendId, {
             blocked: true
         });
 
         const block = await ctx.db.insert('blocks', {
             blocked: otherUserId as Id<"users">,
+            nameBlocked: otherUser.discId.split('#')[0],
+            nameBlocker: currentUser.discId.split('#')[0],
             blocker: currentUser._id,
         });
 

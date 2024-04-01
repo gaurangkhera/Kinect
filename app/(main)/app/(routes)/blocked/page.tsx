@@ -11,12 +11,12 @@ import { Id } from "@/convex/_generated/dataModel";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Head from "next/head";
+import { GenericDocument }  from 'convex/server'
 
 export default function Page() {
-  const friends = useQuery(api.friends.getUserFriends);
-  const unblock = useMutation(api.friends.unBlockUser)
+  const unblock = useMutation(api.friends.unBlockUser);
   const clerkUser = useUser();
-  
+  const blocked = useQuery(api.friends.getUserBlocks);
 
   const currentUser = useQuery(api.users.getUserByEmail, {
     email: clerkUser.user?.emailAddresses[0].emailAddress as string,
@@ -26,7 +26,7 @@ export default function Page() {
     return null;
   }
 
-  if (friends === undefined) {
+  if (blocked === undefined) {
     return (
       <>
         <Skeleton className="h-12 w-full my-1" />
@@ -41,19 +41,18 @@ export default function Page() {
   const unblockHandler = (friendId: string, e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     const promise = unblock({
-        friendId: friendId as Id<"friends">,
+        blockId: friendId as Id<"blocks">,
     })
 
     toast.promise(promise, {
         success: "User unblocked!",
         error(error) {
+            console.log(error)
             return error.data
         },
         loading: "Unblocking user..."
     })
   }
-
-  const blocked = friends.filter((f) => f.blocked)
 
   return (
     <Card className="h-full w-full">
@@ -66,7 +65,7 @@ export default function Page() {
       </CardHeader>
       <CardContent>
         {blocked.length > 0 ? (
-          blocked.map((friend) => (
+          blocked.map((friend: any) => (
             <div
               className="group my-1"
             >
@@ -79,9 +78,7 @@ export default function Page() {
                     <User className="w-5 h-5" />
                   </div>
                   <p className="truncate flex-grow">
-                    {friend.friendTo === currentUser._id
-                      ? friend.nameFriendOf
-                      : friend.nameFriendTo}
+                    {friend.nameBlocked}
                   </p>
                 </div>
                 <DropdownMenu>

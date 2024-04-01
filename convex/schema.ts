@@ -12,6 +12,7 @@ export default defineSchema(
       email: v.string(),
       tokenIdentifier: v.string(),
       discId: v.string(),
+      stripeId: v.optional(v.string()),
     }).index("by_token", ["tokenIdentifier"])
       .index('by_discId', ["discId"])
       .index("by_email", ["email"]),
@@ -32,7 +33,9 @@ export default defineSchema(
     }).index('by_friendId', ['friendId']),
     blocks: defineTable({
       blocked: v.id('users'),
+      nameBlocked: v.string(),
       blocker: v.id('users'),
+      nameBlocker: v.string(),
     }).index('by_blocked', ['blocked'])
       .index('by_blocker', ['blocker']),
   },

@@ -1,5 +1,3 @@
-
-
 import { ContainerScroll } from "@/components/global/container-scroll-animation";
 import Navbar from "@/components/global/navbar";
 import { Button } from "@/components/ui/button";
@@ -7,6 +5,7 @@ import Link from "next/link";
 
 export default function Home() {
   //WIP: remove fault IMAge for home page
+
   return (
     <main className="flex items-center justify-center flex-col">
       <Navbar />
@@ -26,6 +25,7 @@ export default function Home() {
                     </span>
                   </Button>
                 </Link>
+                <Button onClick={handleSendMessage}>Subscribe</Button>
                 <h1 className="text-5xl md:text-8xl bg-clip-text text-transparent bg-gradient-to-b from-primary to-accent font-sans font-bold">
                   Connect with friends, family and more.
                 </h1>
