@@ -25,7 +25,6 @@ export default function Home() {
                     </span>
                   </Button>
                 </Link>
-                <Button onClick={handleSendMessage}>Subscribe</Button>
                 <h1 className="text-5xl md:text-8xl bg-clip-text text-transparent bg-gradient-to-b from-primary to-accent font-sans font-bold">
                   Connect with friends, family and more.
                 </h1>
