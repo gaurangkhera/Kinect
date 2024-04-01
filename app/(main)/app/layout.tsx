@@ -11,14 +11,12 @@ import {
   CardDescription,
   CardFooter,
 } from "@/components/ui/card";
-import { useMutation, useQuery } from "convex/react";
+import { useConvexAuth, useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import {
   Ban,
-  Delete,
   Home,
   MoreHorizontal,
-  PanelLeft,
   PanelRight,
   Trash2,
   User,
@@ -45,7 +43,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import { Id } from "@/convex/_generated/dataModel";
-import { blockUser } from "@/convex/friends";
 
 const font = Inter({ subsets: ["latin"] });
 
@@ -56,6 +53,7 @@ export default function RootLayout({
 }) {
   const clerkUser = useUser();
   const pathname = usePathname();
+  const { isAuthenticated, isLoading } = useConvexAuth();
   const currentUser = useQuery(api.users.getUserByEmail, {
     email: clerkUser.user?.emailAddresses[0].emailAddress as string,
   });
@@ -67,6 +65,16 @@ export default function RootLayout({
 
   if (!currentUser) {
     return null;
+  }
+
+  if (isLoading) {
+    return (
+      <Skeleton className="w-screen h-screen" />
+    );
+  }
+
+  if (!isAuthenticated) {
+    return redirect("/");
   }
 
   const blockFriendHandler = (
