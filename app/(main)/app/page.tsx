@@ -47,7 +47,7 @@ export default function Page() {
           <div>
             <CardTitle>Add friend</CardTitle>
             <CardDescription>
-              Enter your friend&apos;s DiscID here.
+              Enter your friend&apos;s Kinect here.
             </CardDescription>
           </div>
 
