@@ -41,19 +41,47 @@ export const getUserByEmail = query({
 
 export const updateUser = mutation({
   args: {
-    email: v.string(),
     newDiscId: v.string(),
   },
   async handler(ctx, args) {
-    const user = await getUserByEmail(ctx, { email: args.email })
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new ConvexError("Not authenticated");
+    }
+
+    const tokenIdentifier = identity.tokenIdentifier;
+
+    const user = await getUser(ctx, {
+      tokenIdentifier: tokenIdentifier
+    });
 
     if (!user) {
       throw new ConvexError("User not found")
     }
 
+    const friendTos = await ctx.db.query('friends').withIndex('by_friendTo', (q) => q.eq('friendTo', user._id)).collect();
+
+    const friendOfs = await ctx.db.query('friends').withIndex('by_friendOf', (q) => q.eq('friendOf', user._id)).collect();
+
     await ctx.db.patch(user._id, {
       discId: args.newDiscId,
     })
+
+    if (friendTos.length > 0) {
+      for (const friendTo of friendTos) {
+        await ctx.db.patch(friendTo._id, {
+          nameFriendTo: args.newDiscId,
+        })
+      }
+    }
+
+    if(friendOfs.length > 0) {
+      for (const friendOf of friendOfs) {
+        await ctx.db.patch(friendOf._id, {
+          nameFriendOf: args.newDiscId,
+        })
+      }
+    }
 
     return user;
   },

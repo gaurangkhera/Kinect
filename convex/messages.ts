@@ -32,11 +32,31 @@ export const addMessage = mutation({
                 friendId: args.friendId,
                 senderId: currentUser._id,
                 file: args.file,
+                readStatus: false,
             });
 
         return { message }
     },
 });
+
+export const markAsRead = mutation({
+    args: {
+        messageId: v.id('messages'),
+    },
+    async handler(ctx, args) {
+        const message = await ctx.db.get(args.messageId);
+
+        if (!message) {
+            throw new ConvexError('Message not found');
+        }
+
+        await ctx.db.patch(message._id, {
+            readStatus: true,
+        });
+
+        return message;
+    },
+})
 
 export const getMessages = query({
     args: {

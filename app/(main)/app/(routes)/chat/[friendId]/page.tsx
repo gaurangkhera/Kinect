@@ -20,22 +20,33 @@ import { useEffect, useRef, useState } from "react";
 import { useUser } from "@clerk/clerk-react";
 import { CoverImageModal } from "@/components/cover-image";
 import Image from "next/image";
-import { format, isToday, isYesterday, parseISO, isSameDay } from "date-fns";
-import { Label } from "@/components/ui/label";
+import { format, isToday, isYesterday, isSameDay } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
 import Head from "next/head";
+
+const DateSeparator = ({ date }: { date: number }) => {
+  const formattedDate = format(date, "MMMM dd, yyyy");
+
+  return (
+    <div className="flex items-center my-4">
+      <hr className="flex-grow" />
+      <span className="mx-2 text-xs text-gray-500">{formattedDate}</span>
+      <hr className="flex-grow" />
+    </div>
+  );
+};
 
 export default function Page() {
   const clerkUser = useUser();
   const params = useParams();
   const friendId = params.friendId;
+  const [lastReadMessage, setLastReadMessage] = useState<Id<"messages">>();
   const user = useQuery(api.users.getUserByEmail, {
     email: clerkUser.user?.emailAddresses[0].emailAddress as string,
   });
   const [message, setMessage] = useState("");
   const lastMessageRef = useRef<HTMLDivElement | null>(null);
-
-  
+  const markAsRead = useMutation(api.messages.markAsRead);
 
   const friend = useQuery(api.friends.getFriendDetails, {
     friendId: friendId as Id<"friends">,
@@ -46,11 +57,16 @@ export default function Page() {
 
   useEffect(() => {
     if(getMessages !== undefined) {
+      const lastMessage = getMessages[getMessages.length - 1];
+      if (lastMessage && lastMessage.senderId !== user?._id && lastMessage._id !== lastReadMessage) {
+        markAsRead({ messageId: lastMessage._id });
+        setLastReadMessage(lastMessage._id);
+      }
       setTimeout(() => {
         lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
       }, 100);
     }
-  }, [getMessages]);
+  }, [getMessages, user?._id, lastReadMessage]);
 
   const sendMessage = useMutation(api.messages.addMessage);
 
@@ -213,7 +229,7 @@ export default function Page() {
                       </p>
                     </div>
                   </div>
-                  {showSeparator && <hr className="my-4" />}
+                  {showSeparator && <DateSeparator date={nextMessage._creationTime} />}
                 </>
               );
             })}

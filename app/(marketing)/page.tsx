@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export default function Home() {
-  //WIP: remove fault IMAge for home page
 
   return (
     <main className="flex items-center justify-center flex-col">

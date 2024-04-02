@@ -44,7 +44,6 @@ export default function Page() {
 
   const saveChanges = async () => {
     const promise = updateUser({
-      email: clerkUser.user?.emailAddresses[0].emailAddress as string,
       newDiscId: `${discId}#${userIdentifier}`,
     });
 

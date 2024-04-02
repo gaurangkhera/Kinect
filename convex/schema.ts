@@ -30,6 +30,7 @@ export default defineSchema(
       file: v.boolean(),
       friendId: v.id('friends'),
       senderId: v.id('users'),
+      readStatus: v.boolean(),
     }).index('by_friendId', ['friendId']),
     blocks: defineTable({
       blocked: v.id('users'),

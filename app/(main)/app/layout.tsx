@@ -43,6 +43,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import { Id } from "@/convex/_generated/dataModel";
+import { FriendItem } from "@/components/friend-item";
 
 const font = Inter({ subsets: ["latin"] });
 
@@ -60,8 +61,6 @@ export default function RootLayout({
   const friends = useQuery(api.friends.getUserFriends)?.filter(
     (friend) => friend.active && !friend.blocked
   );
-  const removeFriend = useMutation(api.friends.removeFriend);
-  const blockFriend = useMutation(api.friends.blockUser);
 
   if (!currentUser) {
     return null;
@@ -77,41 +76,10 @@ export default function RootLayout({
     return redirect("/");
   }
 
-  const blockFriendHandler = (
-    friendId: string,
-    event: React.MouseEvent<HTMLDivElement>
-  ) => {
-    event.stopPropagation();
-    const promise = blockFriend({ friendId: friendId as Id<"friends"> });
-
-    toast.promise(promise, {
-      success: "User blocked!",
-      loading: "Blocking user...",
-      error(error) {
-        return error.data
-      },
-    });
-  };
-
-  const removeFriendHandler = (
-    friendId: string,
-    event: React.MouseEvent<HTMLDivElement>
-  ) => {
-    event.stopPropagation();
-    const promise = removeFriend({ friendId: friendId as Id<"friends"> });
-    toast.promise(promise, {
-      success: "Friend removed!",
-      loading: "Removing friend...",
-      error(error) {
-        return error.data
-      },
-    });
-
-    redirect("/app");
-  };
+  
 
   return (
-<div className={font.className}>
+<div>
         <Toaster position="top-center" richColors />
         <ThemeProvider
           attribute="class"
@@ -155,6 +123,7 @@ export default function RootLayout({
                       Blocked users
                     </div>
                   </Link>
+                  <hr className="text-primary my-3 -mt-1"/>
                   {friends === undefined ? (
                     <>
                       <Skeleton className="h-12 w-full my-1" />
@@ -165,61 +134,7 @@ export default function RootLayout({
                     </>
                   ) : (
                     friends.map((friend) => (
-                      <Link
-                        key={friend._id}
-                        href={`/app/chat/${friend._id}`}
-                        className="group my-1"
-                      >
-                        <div
-                          className={`group-hover:bg-muted group-hover:text-primary rounded-lg p-3 gap-2 flex flex-row items-center justify-between cursor-pointer ${
-                            pathname === `/app/chat/${friend._id}`
-                              ? "bg-primary text-background"
-                              : "bg-background text-primary text-background"
-                          }`}
-                        >
-                          <div className="flex flex-row gap-2 items-center min-w-0">
-                            <div className="group-hover:bg-primary group-hover:text-muted text-primary bg-muted rounded-full p-2">
-                              <User className="w-5 h-5" />
-                            </div>
-                            <p className="truncate flex-grow">
-                              {friend.friendTo === currentUser._id
-                                ? friend.nameFriendOf
-                                : friend.nameFriendTo}
-                            </p>
-                          </div>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                size="icon"
-                                className="w-8 h-8 text-primary"
-                                variant={"outline"}
-                              >
-                                <MoreHorizontal className="w-4 h-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="z-[999999999]">
-                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem
-                                onClick={(e) =>
-                                  removeFriendHandler(friend._id, e)
-                                }
-                                className="gap-1"
-                              >
-                                <Trash2 className="w-4 h-4" /> Remove friend
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                className="gap-1"
-                                onClick={(e) =>
-                                  blockFriendHandler(friend._id, e)
-                                }
-                              >
-                                <Ban className="w-4 h-4" /> Block
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                      </Link>
+                      <FriendItem friend={friend} />
                     ))
                   )}
                   <SheetFooter className="bottom-0 fixed mb-4">
@@ -255,7 +170,7 @@ export default function RootLayout({
                 <CardContent>
                   <Link href={`/app`} className="group my-1">
                     <div
-                      className={`group-hover:bg-muted group-hover:text-primary rounded-lg p-3 gap-2 flex flex-row items-center cursor-pointer ${
+                      className={`group-hover:bg-muted group-hover:text-primary rounded-lg p-3 gap-2 flex flex-row items-center cursor-pointer transition-all ${
                         pathname === `/app`
                           ? "bg-primary text-background"
                           : "bg-background text-primary text-background"
@@ -269,7 +184,7 @@ export default function RootLayout({
                   </Link>
                   <Link href={`/app/blocked`} className="group my-1">
                     <div
-                      className={`group-hover:bg-muted group-hover:text-primary rounded-lg p-3 gap-2 flex flex-row items-center cursor-pointer ${
+                      className={`group-hover:bg-muted group-hover:text-primary rounded-lg p-3 gap-2 flex flex-row items-center cursor-pointer transition-all ${
                         pathname === `/app/blocked`
                           ? "bg-primary text-background"
                           : "bg-background text-primary text-background"
@@ -281,6 +196,8 @@ export default function RootLayout({
                       Blocked users
                     </div>
                   </Link>
+
+                      <hr className="my-2 mb-3" />
                   {friends === undefined ? (
                     <>
                       <Skeleton className="h-12 w-full my-1" />
@@ -292,68 +209,14 @@ export default function RootLayout({
                     </>
                   ) : (
                     friends.map((friend) => (
-                      <Link
-                        key={friend._id}
-                        href={`/app/chat/${friend._id}`}
-                        className="group my-1"
-                      >
-                        <div
-                          className={`group-hover:bg-muted group-hover:text-primary rounded-lg p-3 gap-2 flex flex-row items-center justify-between cursor-pointer ${
-                            pathname === `/app/chat/${friend._id}`
-                              ? "bg-primary text-background"
-                              : "bg-background text-primary text-background"
-                          }`}
-                        >
-                          <div className="flex flex-row gap-2 items-center min-w-0">
-                            <div className="group-hover:bg-primary group-hover:text-muted text-primary bg-muted rounded-full p-2">
-                              <User className="w-5 h-5" />
-                            </div>
-                            <p className="truncate flex-grow">
-                              {friend.friendTo === currentUser._id
-                                ? friend.nameFriendOf
-                                : friend.nameFriendTo}
-                            </p>
-                          </div>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                size="icon"
-                                className="w-8 h-8 text-primary"
-                                variant={"outline"}
-                              >
-                                <MoreHorizontal className="w-4 h-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem
-                                className="gap-1"
-                                onClick={(e) =>
-                                  removeFriendHandler(friend._id, e)
-                                }
-                              >
-                                <Trash2 className="w-4 h-4" /> Remove friend
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                className="gap-1"
-                                onClick={(e) =>
-                                  blockFriendHandler(friend._id, e)
-                                }
-                              >
-                                <Ban className="w-4 h-4" /> Block
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                      </Link>
+                      <FriendItem friend={friend} />
                     ))
                   )}
                 </CardContent>
                 <CardFooter className="bottom-0 fixed">
                   <Link href="/app/account" className="group">
                     <div
-                      className={`group-hover:bg-muted group-hover:text-primary rounded-lg p-3 gap-2 flex flex-row items-center cursor-pointer ${
+                      className={`group-hover:bg-muted group-hover:text-primary rounded-lg p-3 gap-2 flex flex-row items-center cursor-pointer transition-all ${
                         pathname === `/app/account`
                           ? "bg-primary text-background"
                           : "bg-background text-primary text-background"

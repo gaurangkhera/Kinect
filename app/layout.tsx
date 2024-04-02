@@ -1,7 +1,7 @@
-import { ThemeProvider } from "@/components/theme-provider";
 import ConvexClientProviderWithClerk from "./ConvexClientProvider";
 import { EdgeStoreProvider } from "@/lib/edgestore";
 import { Metadata } from "next";
+import { Inter } from "next/font/google";
 
 export const metadata: Metadata = {
   title: {
@@ -12,6 +12,8 @@ export const metadata: Metadata = {
   description: 'Kinect is your favorite social media platform, but better. Connect with friends, family and more.',
 }
 
+const font = Inter({ subsets: ['latin'] })
+
 export default function RootLayout({
   children,
 }: {
@@ -20,7 +22,7 @@ export default function RootLayout({
   return (
     <html>
       <ConvexClientProviderWithClerk>
-        <body>
+        <body className={font.className}>
           <EdgeStoreProvider>
             {children}
           </EdgeStoreProvider>

@@ -11,7 +11,6 @@ import { Id } from "@/convex/_generated/dataModel";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import Head from "next/head";
-import { GenericDocument }  from 'convex/server'
 
 export default function Page() {
   const unblock = useMutation(api.friends.unBlockUser);
